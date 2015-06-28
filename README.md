@@ -68,5 +68,12 @@ you will get an error that GPIB is not available). If you export to  "normalized
 file format, you can directly import the result to the MHS-5200A using the
 -f option with setwave5200. Just keep the length at 1024.
 
-Example screen shot
-(coming soon)
+Example screen shots:
+
+Here's the TTI application creating a cardiac pulse:
+![TTI App](https://raw.githubusercontent.com/wd5gnr/mhs5200a/master/images/screenshot_212.png "App View")
+
+
+Here's the reproduced waveform on a scope:
+
+![Scope](https://raw.githubusercontent.com/wd5gnr/mhs5200a/master/images/cardiac.png "Scope View")
