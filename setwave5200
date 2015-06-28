@@ -1,4 +1,22 @@
 #!/bin/bash
+# I expect to find my .dat and .awk files in the same directory I am in!
+if [ -z "$1" -o "$1" == "--help" -o "$1" == "-h" ]
+then
+cat <<EOF
+setwave5200 by Al Williams al.williams@awce.com
+Public Domain -- use it how you like
+Source: https://github.com/wd5gnr/mhs5200a
+
+Usage:
+setwave5200 port csvfile memory [csvfile memory ....]
+
+Example:
+
+setwave5200 /dev/ttyUSB0 sine.csv 0 cos.csv 1 noise.csv 15
+
+EOF
+exit 1
+fi
 PORT="$1"
 stty -F "$PORT" 57600
 shift
@@ -19,5 +37,5 @@ do
   shift
   shift
 done
-
+exit 0
 
