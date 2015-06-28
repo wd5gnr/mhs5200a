@@ -50,7 +50,7 @@ The waves subdirectory has some predefined waves for your enjoyment.
 
 Install
 =======
-Just put the three files on your path in the same directory:
+Just put the following files on your path in the same directory:
 * setwave5200
 * setwave5200.dat
 * setwave5200.awk
