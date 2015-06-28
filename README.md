@@ -33,9 +33,17 @@ The CSV file format is pretty forgiving. You can seperate data by
 commas or newlines and quotes are allowed but not required. Blank lines
 and lines starting with # are skipped.
 
+Due to rounding errors, going all the way to the limit may cause some
+distortion at the edges. The example formula limits the amplitude to 95%
+
+       =0.95*SIN(2*PI()/1024*$A2)
+
+In English, take a 1/1024 of a full sample, multiply it by the sample #
+(N) and take the sine. Then Take 95% of the full value.
+
+
 Install
 =======
-
 Just put the three files on your path in the same directory:
 setwave5200
 setwave5200.dat
