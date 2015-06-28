@@ -8,7 +8,10 @@ Public Domain -- use it how you like
 Source: https://github.com/wd5gnr/mhs5200a
 
 Usage:
-setwave5200 port csvfile memory [csvfile memory ....]
+setwave5200 [-f] port csvfile memory [csvfile memory ....]
+
+-f Expect csvfiles to be between -1 and 1
+(otherwise expect 0 to 255)
 
 Example:
 
@@ -17,6 +20,13 @@ Memory is between 0 and 15
 EOF
 exit 1
 fi
+NORM=0
+if [ "$1" == "-f" ]
+then
+    NORM=1
+    shift
+fi
+
 PORT="$1"
 stty -F "$PORT" 57600 cread ignbrk -brkint -icrnl -imaxbel -opost -onlcr -isig -icanon -iexten -echo -echoe -echok -echoctl -echoke min 60 time 1 crtscts
 
@@ -33,6 +43,7 @@ RV=255
 trap 'echo Aborting; cleanup; exit 255' EXIT
 while [ ! -z "$2" ]
 do
+# Check for in range number
     case "$2" in
 	''|*[!0-9]*)
 	    echo Slot must be between 0 and 15
@@ -51,7 +62,17 @@ do
 	continue
     fi
     
-  if awk -vchan="$2" -f "$0.awk" "$1" "$0.dat" >"$TFILE"
+FILE="$1"
+if [ $NORM == 1 ]
+then
+    awk -f $0.norm.awk "$FILE" | awk -vchan="$2" -f "$0.awk" - "$0.dat" >"$TFILE"
+    RV=$?
+else
+    awk -vchan="$2" -f "$0.awk" "$FILE" "$0.dat" >"$TFILE"
+    RV=$?
+fi    
+
+  if [ $RV == 0 ]
   then
      LCT=16
      while read -r line 
@@ -82,6 +103,12 @@ do
   shift
   shift
 done
+if [ -n "$1" ]
+then
+    echo Warning: Odd number of arguments
+    echo Use no arguments for help
+    exit 5
+fi    
 trap - EXIT
 cleanup
 exit 0

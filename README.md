@@ -41,6 +41,12 @@ distortion at the edges. The example formula limits the amplitude to 95%
 In English, take a 1/1024 of a full sample, multiply it by the sample #
 (N) and take the sine. Then Take 95% of the full value.
 
+By default, the program expects the CSV data to go from 0 to 255. If you
+use the -f option, it will accept data from -1.0 to 1.0 and do the scaling
+for you. The -f option applies to the entire command line.
+
+The waves subdirectory has some predefined waves for your enjoyment.
+
 
 Install
 =======
@@ -48,7 +54,8 @@ Just put the three files on your path in the same directory:
 setwave5200
 setwave5200.dat
 setwave5200.awk
+setwave5200.norm.awk
 
-You will also want the xls file and an Excel-compatible spreadsheet
+You will also want the xls file and an Excel-compatible spreadsheet program.
 
 
