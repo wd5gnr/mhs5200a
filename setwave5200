@@ -13,29 +13,76 @@ setwave5200 port csvfile memory [csvfile memory ....]
 Example:
 
 setwave5200 /dev/ttyUSB0 sine.csv 0 cos.csv 1 noise.csv 15
-
+Memory is between 0 and 15
 EOF
 exit 1
 fi
 PORT="$1"
-stty -F "$PORT" 57600 ignbrk -brkint -icrnl -imaxbel -opost -onlcr -isig -icanon -iexten -echo -echoe -echok -echoctl -echoke min 60 time 1
+stty -F "$PORT" 57600 cread ignbrk -brkint -icrnl -imaxbel -opost -onlcr -isig -icanon -iexten -echo -echoe -echok -echoctl -echoke min 60 time 1 crtscts
+
 shift
+
+function cleanup() {
+    exec 3>&-
+    rm $TFILE
+}
+
+exec 3<>"$PORT"
+TFILE=`mktemp -t waveXXXXXXXXXX`
+RV=255
+trap 'echo Aborting; cleanup; exit 255' EXIT
 while [ ! -z "$2" ]
 do
-  if awk -vchan="$2" -f "$0.awk" "$1" "$0.dat" >/tmp/wave$$
+    case "$2" in
+	''|*[!0-9]*)
+	    echo Slot must be between 0 and 15
+	    echo Skipping $1
+	    shift
+	    shift
+	    continue
+	    ;;
+    esac
+    if [ "$2" -gt 15 ]
+    then
+	echo Slot must be between 0 and 15
+	echo Skipping $1
+	shift
+	shift
+	continue
+    fi
+    
+  if awk -vchan="$2" -f "$0.awk" "$1" "$0.dat" >"$TFILE"
   then
+     LCT=16
      while read -r line 
      do
-        echo -n . 
-        echo "$line" >"$PORT"
-	sleep 1
-     done </tmp/wave$$
+	 if [ "$line" != ":" ]
+         then
+	     echo -n $LCT..
+	     LCT=$((LCT - 1))
+	 fi
+         echo "$line" >&3
+	 echo >&3
+	 if [ "$line" != ":" ]
+	 then
+	     read -rs -t 1 iline <&3
+	     if [ $? -gt 128 ]
+	     then
+		 echo Warning: instrument did not respond
+	     fi 
+	 fi
+	 sleep .01   # .005 was unreliable
+     done <"$TFILE"
+     echo
      echo "$1 done"
   else
+    echo
     echo "$1 failed"
   fi
   shift
   shift
 done
+trap - EXIT
+cleanup
 exit 0
 

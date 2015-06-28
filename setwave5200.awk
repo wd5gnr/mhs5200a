@@ -16,7 +16,7 @@ BEGIN {
 }
 
 function dohead() {
-    printf(":a%1x%1x",chan,chunk);
+    printf(":\n:a%1x%1x",chan,chunk);
     header=1;    
 }
 
