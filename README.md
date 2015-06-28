@@ -51,11 +51,22 @@ The waves subdirectory has some predefined waves for your enjoyment.
 Install
 =======
 Just put the three files on your path in the same directory:
-setwave5200
-setwave5200.dat
-setwave5200.awk
-setwave5200.norm.awk
+* setwave5200
+* setwave5200.dat
+* setwave5200.awk
+* setwave5200.norm.awk
 
 You will also want the xls file and an Excel-compatible spreadsheet program.
 
 
+Tip
+===
+If you really want to generate GUI waveforms, register on the TTI site
+http://tti1.co.uk/downloads/waveman-plus.htm and download Waveform Manager Plus.
+It is free, but you do have to register. It will run well under Wine (although
+you will get an error that GPIB is not available). If you export to  "normalized"
+file format, you can directly import the result to the MHS-5200A using the
+-f option with setwave5200. Just keep the length at 1024.
+
+Example screen shot
+(coming soon)
