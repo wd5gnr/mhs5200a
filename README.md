@@ -47,6 +47,11 @@ for you. The -f option applies to the entire command line.
 
 The waves subdirectory has some predefined waves for your enjoyment.
 
+NOTE: If you load a channel while it is active, you will have to change
+to another channel and then return before you see the change. Apparently,
+the instrument loads a working buffer from the channel and does not read
+it again until you reselect it.
+
 
 Install
 =======
