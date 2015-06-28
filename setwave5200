@@ -87,7 +87,7 @@ fi
 	 if [ "$line" != ":" ]
 	 then
 	     read -rs -t 1 iline <&3
-	     if [ $? -gt 128 ]
+	     if [ $? -gt 128 -o "${iline:0:2}" != "ok" ]
 	     then
 		 echo Warning: instrument did not respond
 	     fi 
