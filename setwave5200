@@ -18,7 +18,7 @@ EOF
 exit 1
 fi
 PORT="$1"
-stty -F "$PORT" 57600
+stty -F "$PORT" 57600 ignbrk -brkint -icrnl -imaxbel -opost -onlcr -isig -icanon -iexten -echo -echoe -echok -echoctl -echoke min 60 time 1
 shift
 while [ ! -z "$2" ]
 do

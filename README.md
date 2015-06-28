@@ -1,3 +1,11 @@
+IMPORTANT NOTE
+==============
+I have discovered the serial port open does NOT work right unless my
+debugging tool also has the port open. This will be fixed shortly, but
+for now it means this won't work for you unless you use another terminal
+program (e.g., cutecom) to hold the port open while you send data. Sorry
+about that.
+
 About setwave5200
 =================
 
