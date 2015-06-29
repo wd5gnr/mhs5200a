@@ -3,7 +3,7 @@ About setwave5200
 
 ![Spreadsheet](https://raw.githubusercontent.com/wd5gnr/mhs5200a/master/images/screenshot_211.png "The system in action")
 
-The MHS5200A () is an inexpensive family of DDS signal generators that have
+The MHS5200A (example: http://www.ebay.com/itm/25MHz-Dual-Channel-DDS-Function-Signal-Generator-Arbitrary-Wave-Sweep-Software-/181754377462) is an inexpensive family of DDS signal generators that have
 16 arbitrary wave functions. However, the software is for Windows and not
 especially good (giant Labview compiled program with lots of issues).
 
