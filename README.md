@@ -82,3 +82,18 @@ Here's the TTI application creating a cardiac pulse:
 Here's the reproduced waveform on a scope:
 
 ![Scope](https://raw.githubusercontent.com/wd5gnr/mhs5200a/master/images/cardiac.png "Scope View")
+
+Experimental
+============
+If you are brave, feel free to try the wavegen script. WARNING: This will NOT
+work out of the box for you. You must edit it for your own setup.
+
+What does it do? It creates (or reuses) a directory for you. In my case, I
+use ~/dds. It also launches a Waveform editor (in my case, using wine).
+By saving an nrm (-1,1) or csv (0,255) file into ~/dds/2 (for example), the
+program will download the file to slot #2 and then move the file to
+~/dds/2/sent. Since the Waveform editor keeps resetting the directory,
+you probably want to set the directory to its default directory.
+
+If you try this and it works for you (or doesn't) let me know. If people
+actually use it, I will probably spruce it up a little more.

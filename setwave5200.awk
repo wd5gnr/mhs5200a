@@ -1,5 +1,5 @@
 BEGIN {
-    print ":"
+#    print ":"
     FS=",";
     ct=0
     chunk=0
@@ -30,7 +30,7 @@ header==0 {
 	gsub("[ \t\r\n]","");
 	for (i=1;i<=NF;i++)  {
 	    if (ct==64) {
-		printf("\r\n");
+		print ""
 		ct=0;
 		chunk++;
 		if (chunk==16) exit(0)

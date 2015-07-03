@@ -1,0 +1,92 @@
+#!/bin/bash
+# This script will create a virtual folder for the MHS5200A and launch
+# a GUI program. By saving csv or nrm files to the virtual folder, you will
+# program the instrument automatically
+
+# You should expect to have to modify this script for your own purposes
+# You will need inotify-tools to make this work
+
+# I may add getopt support to set all of these, but honestly
+# most of them will never change (other than, maybe, the serial port
+# if you have more than one instrument, make copies of the script with
+# different names and options
+
+# path to the setwave5200 scripts
+PATH="$PATH:$HOME/projects/mhs5200a"  
+
+# Windows Waveform GUI
+WFGUI="$HOME/wine-envs/WaveformManager/drive_c/Program Files (x86)/Waveman/waveman.exe"
+
+# the Wine prefix to use
+export WINEPREFIX="$HOME/wine-envs/WaveformManager"
+
+
+# Instrument directory
+IDIR="$HOME/dds"
+
+# Serial port for instrument
+SPORT=/dev/ttyUSB8
+
+NOTIFY="notify-send"
+
+# OK you should not need to change anything below here normally
+
+# make sure directory tree exists
+mkdir -p "$IDIR"
+
+for I in 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15
+  do mkdir -p "$IDIR/$I" "$IDIR/$I/sent"
+done
+
+wine "$WFGUI" &
+WPID=$!
+MAINPID=$$
+( while kill -0 $WPID
+  do
+    sleep 5
+  done
+  kill $WPID $MAINPID
+  $NOTIFY "Shutting down wavegen"
+  exit 0
+  ) &
+
+
+inotifywait -q  -r --exclude 'sent' --exclude '.wmi'  -m --format "%w %f" -e close_write "$IDIR" |
+    (
+	while read -r -a fileevent
+	do
+	    dir="${fileevent[0]}"
+	    fn="${fileevent[1]}"
+	    ext="${fn##*.}"
+	    tmp="${dir%/}"
+	    SLOT="${tmp##*/}"
+	    if [ "$ext" == "csv" ]
+	    then
+		echo DEBUG Not using -f
+		setwave5200 "${SPORT}" "${dir}/${fn}" $SLOT
+		mv "${dir}/${fn}" "${dir}/sent/${fn}"
+                $NOTIFY "Sent ${fn} to slot $SLOT"
+	    else if [ "$ext" == "nrm" ]
+		 then
+		     echo DEBUG Using -f
+		     setwave5200 -f "${SPORT}"  "${dir}/${fn}" $SLOT
+		     mv "${dir}/${fn}" "${dir}/sent/${fn}"
+                     $NOTIFY "Sent ${fn} to slot $SLOT"
+		 else
+		     # skip unknown file types
+                     $NOTIFY "Skipping unknown file ${fn}"
+		     mv "${dir}/${fn}" "${dir}/sent/${fn}"
+
+		 fi
+		 
+	    fi
+	done
+    )
+
+
+
+
+echo Done
+
+
+
